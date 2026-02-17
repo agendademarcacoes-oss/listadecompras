@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang='pt'>
+<head>
+    <meta charset='UTF-8'/>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes' name='viewport'/>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'/>
+    
+    <!-- Configurações para Blogspot -->
+    <meta content='blogger' name='generator'/>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+    
+    <title><data:blog.pageTitle/></title>
+    
+    <!-- Meta tags padrão do Blogspot -->
+    <b:if cond='data:blog.metaDescription'>
+        <meta expr:content='data:blog.metaDescription' name='description'/>
+    </b:if>
+    
+    <!-- Configuração para web app iOS (modo app) -->
+    <meta content='yes' name='apple-mobile-web-app-capable'/>
+    <meta content='black-translucent' name='apple-mobile-web-app-status-bar-style'/>
+    <meta content='Lista Certa' name='apple-mobile-web-app-title'/>
+    <meta content='telephone=no' name='format-detection'/>
+    
+    <!-- Ícone para iOS -->
+    <link href='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%233b82f6\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'white\' font-family=\'system-ui, -apple-system, sans-serif\'%3E🛒%3C/text%3E%3C/svg%3E' rel='apple-touch-icon'/>
+    
+    <!-- Favicon tradicional -->
+    <link href='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%233b82f6\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'white\' font-family=\'system-ui, -apple-system, sans-serif\'%3E🛒%3C/text%3E%3C/svg%3E' rel='icon' type='image/svg+xml'/>
+    
+    <!-- Manifest para PWA -->
+    <link href='data:application/manifest+json,%7B%22name%22%3A%22Lista%20Certa%22%2C%22short_name%22%3A%22Lista%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%233b82f6%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data:image/svg+xml,%253Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%253E%253Ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%25233b82f6\'/%253E%253Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'white\' font-family=\'system-ui, -apple-system, sans-serif\'%253E🛒%253C/text%253E%253C/svg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image/svg+xml%22%7D%5D%7D' rel='manifest'/>
+    
+    <style>
+        /* ===== RESET E VARIÁVEIS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            --bg: #f5f7fa;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --border: #e2e8f0;
+            --accent: #2563eb;
+            --accent-soft: #dbeafe;
+            --accent-light: #eff6ff;
+            --danger: #dc2626;
+            --danger-soft: #fee2e2;
+            --success: #16a34a;
+            --success-soft: #dcfce7;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.05);
+            --radius-lg: 28px;
+            --radius-md: 20px;
+            --radius-sm: 16px;
+            transition: background-color 0.3s ease, color 0.2s ease;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        body.night {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border: #334155;
+            --accent: #38bdf8;
+            --accent-soft: #1e3a5f;
+            --accent-light: #0f2b44;
+            --danger: #f87171;
+            --danger-soft: #451a1a;
+            --success: #4ade80;
+            --success-soft: #14532d;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 12px 14px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Cabeçalho */
+        .app-bar {
+            background-color: var(--surface);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            margin-bottom: 4px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.2));
+        }
+
+        .logo-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent), #4f46e5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .theme-toggle {
+            background: var(--accent-light);
+            border: 1px solid var(--border);
+            font-size: 1.8rem;
+            padding: 8px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            line-height: 1;
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.94);
+            background: var(--accent-soft);
+        }
+
+        /* Seções */
+        .section {
+            background-color: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 20px 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .section-title span:first-child {
+            font-size: 1.6rem;
+        }
+
+        .badge {
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        /* Catálogo */
+        .catalog-tabs {
+            display: flex;
+            gap: 8px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 60px;
+            margin-bottom: 18px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 8px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+        }
+
+        .tab-btn.active {
+            background: var(--surface);
+            color: var(--accent);
+            border-color: var(--border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .catalog-list {
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--border);
+        }
+
+        .catalog-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .catalog-list::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 10px;
+        }
+        .catalog-list::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .category-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .category-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+            padding: 8px 0 4px 12px;
+            background: linear-gradient(to right, var(--accent-soft), transparent);
+            border-radius: 40px 0 0 40px;
+            margin-top: 4px;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg);
+            border-radius: 60px;
+            padding: 6px 6px 6px 18px;
+            border: 1px solid var(--border);
+            transition: all 0.1s;
+        }
+
+        .item-row:active {
+            background: var(--accent-light);
+        }
+
+        .item-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .add-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 40px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+            transition: transform 0.1s, box-shadow 0.2s;
+            line-height: 1;
+        }
+
+        .add-btn:active {
+            transform: scale(0.88);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Lista pessoal */
+        .list-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .custom-add-btn {
+            background: var(--accent-soft);
+            border: 1px dashed var(--accent);
+            color: var(--accent);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .custom-add-btn:active {
+            background: var(--accent-light);
+        }
+
+        .shopping-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 460px;
+            overflow-y: auto;
+            padding: 4px 4px 4px 0;
+            scrollbar-width: thin;
+        }
+
+        .shopping-items::-webkit-scrollbar {
+            width: 4px;
+        }
+        .shopping-items::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg);
+            padding: 10px 12px;
+            border-radius: 60px;
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+            transition: background 0.1s;
+        }
+
+        .item-check {
+            width: 26px;
+            height: 26px;
+            accent-color: var(--success);
+            border-radius: 30px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .item-name-list {
+            font-weight: 500;
+            color: var(--text-primary);
+            min-width: 90px;
+            flex: 2 1 120px;
+            word-break: break-word;
+            font-size: 1rem;
+            transition: color 0.1s;
+        }
+
+        .item-name-list.checked {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        .item-qty, .item-price {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 10px 6px;
+            width: 70px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            outline: none;
+            transition: border 0.1s;
+        }
+
+        .item-qty:focus, .item-price:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-soft);
+        }
+
+        .item-total {
+            min-width: 70px;
+            text-align: right;
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1.1rem;
+            background: var(--success-soft);
+            padding: 6px 14px;
+            border-radius: 40px;
+            flex-shrink: 0;
+        }
+
+        .remove-item {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            width: 44px;
+            height: 44px;
+            border-radius: 40px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .remove-item:active {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        /* Rodapé com total */
+        .total-footer {
+            background: var(--surface);
+            border-radius: 60px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            margin-top: 8px;
+        }
+
+        .total-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .total-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 6px 22px;
+            border-radius: 60px;
+            line-height: 1.2;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            padding-left: 8px;
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .list-item {
+            animation: fadeIn 0.2s ease;
+        }
+
+        /* Widgets do Blogspot */
+        #Attribution1, #BlogArchive1, #Profile1 {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inclusão de widgets do Blogspot (opcional) -->
+    <b:section class='navbar' id='navbar' maxwidgets='1' showaddelement='no'>
+        <b:widget id='Navbar1' locked='true' title='Navbar' type='Navbar'/>
+    </b:section>
+
+    <div class='container'>
+        <!-- cabeçalho -->
+        <div class='app-bar'>
+            <div class='logo'>
+                <span class='logo-icon'>🛒</span>
+                <span class='logo-text'>lista certa</span>
+            </div>
+            <div class='theme-toggle' id='themeToggle' aria-label='alternar tema'>🌙</div>
+        </div>
+
+        <!-- catálogo de produtos -->
+        <div class='section'>
+            <div class='section-header'>
+                <div class='section-title'>
+                    <span>📋</span> catálogo
+                </div>
+                <span class='badge'>Brasil + Portugal</span>
+            </div>
+            <div class='catalog-tabs'>
+                <button class='tab-btn active' id='viewCategory'>por categoria</button>
+                <button class='tab-btn' id='viewAlpha'>A-Z</button>
+            </div>
+            <div id='catalogContainer' class='catalog-list'>
+                <!-- preenchido via js -->
+            </div>
+        </div>
+
+        <!-- lista de compras -->
+        <div class='section'>
+            <div class='section-header'>
+                <div class='section-title'>
+                    <span>📝</span> minha lista
+                </div>
+                <div class='list-actions'>
+                    <button class='custom-add-btn' id='addCustomBtn'>
+                        <span>➕</span> personalizado
+                    </button>
+                </div>
+            </div>
+            <div id='shoppingListContainer' class='shopping-items'>
+                <!-- lista dinâmica -->
+            </div>
+            <div class='total-footer'>
+                <span class='total-label'>💰 total</span>
+                <span class='total-value' id='grandTotal'>0.00</span>
+            </div>
+            <div class='hint'>* preço unitário × quantidade</div>
+        </div>
+    </div>
+
+    <!-- Rodapé do Blogspot -->
+    <b:section class='footer' id='footer'>
+        <b:widget id='Attribution1' locked='true' title='' type='Attribution'/>
+    </b:section>
+
+    <script>
+        //<![CDATA[
+        (function() {
+            // ======================= BASE DE DADOS =======================
+            const products = [
+                // Mercearia / Enlatados / Massas
+                { name: "Arroz", category: "Mercearia" },
+                { name: "Feijão preto", category: "Mercearia" },
+                { name: "Feijão carioca", category: "Mercearia" },
+                { name: "Açúcar", category: "Mercearia" },
+                { name: "Café", category: "Mercearia" },
+                { name: "Farinha de trigo", category: "Mercearia" },
+                { name: "Farinha de mandioca", category: "Mercearia" },
+                { name: "Macarrão espaguete", category: "Mercearia" },
+                { name: "Macarrão parafuso", category: "Mercearia" },
+                { name: "Molho de tomate", category: "Mercearia" },
+                { name: "Atum em lata", category: "Mercearia" },
+                { name: "Sardinha em lata", category: "Mercearia" },
+                { name: "Milho em conserva", category: "Mercearia" },
+                { name: "Ervilha em conserva", category: "Mercearia" },
+                { name: "Palmito", category: "Mercearia" },
+                { name: "Azeitona", category: "Mercearia" },
+                { name: "Óleo de soja", category: "Mercearia" },
+                { name: "Azeite", category: "Mercearia" },
+                { name: "Vinagre", category: "Mercearia" },
+                { name: "Sal refinado", category: "Mercearia" },
+                { name: "Sal grosso", category: "Mercearia" },
+                { name: "Biscoito cream cracker", category: "Mercearia" },
+                { name: "Biscoito recheado", category: "Mercearia" },
+                { name: "Cereal matinal", category: "Mercearia" },
+                { name: "Aveia", category: "Mercearia" },
+                { name: "Granola", category: "Mercearia" },
+                { name: "Leite condensado", category: "Mercearia" },
+                { name: "Creme de leite", category: "Mercearia" },
+                { name: "Chocolate em pó", category: "Mercearia" },
+                { name: "Fermento químico", category: "Mercearia" },
+                { name: "Fermento biológico", category: "Mercearia" },
+                { name: "Papel alumínio", category: "Utensílios" },
+                { name: "Filme plástico", category: "Utensílios" },
+                { name: "Saco de lixo", category: "Limpeza" },
+                // Bebidas
+                { name: "Água mineral", category: "Bebidas" },
+                { name: "Água com gás", category: "Bebidas" },
+                { name: "Refrigerante", category: "Bebidas" },
+                { name: "Cerveja", category: "Bebidas" },
+                { name: "Vinho tinto", category: "Bebidas" },
+                { name: "Vinho branco", category: "Bebidas" },
+                { name: "Suco de laranja", category: "Bebidas" },
+                { name: "Suco de uva", category: "Bebidas" },
+                { name: "Chá gelado", category: "Bebidas" },
+                // Frescos
+                { name: "Carne bovina", category: "Frescos" },
+                { name: "Frango inteiro", category: "Frescos" },
+                { name: "Peito de frango", category: "Frescos" },
+                { name: "Bacalhau", category: "Frescos" },
+                { name: "Peixe fresco", category: "Frescos" },
+                { name: "Ovos", category: "Frescos" },
+                { name: "Tomate", category: "Frescos" },
+                { name: "Alface", category: "Frescos" },
+                { name: "Cebola", category: "Frescos" },
+                { name: "Batata", category: "Frescos" },
+                { name: "Cenoura", category: "Frescos" },
+                { name: "Banana", category: "Frescos" },
+                { name: "Maçã", category: "Frescos" },
+                { name: "Laranja", category: "Frescos" },
+                { name: "Limão", category: "Frescos" },
+                { name: "Alho cabeça", category: "Frescos" },
+                // Laticínios / Frios
+                { name: "Leite", category: "Laticínios" },
+                { name: "Iogurte natural", category: "Laticínios" },
+                { name: "Queijo muçarela", category: "Laticínios" },
+                { name: "Queijo prato", category: "Laticínios" },
+                { name: "Requeijão", category: "Laticínios" },
+                { name: "Manteiga", category: "Laticínios" },
+                { name: "Margarina", category: "Laticínios" },
+                { name: "Nata", category: "Laticínios" },
+                { name: "Presunto", category: "Frios" },
+                { name: "Salame", category: "Frios" },
+                // Temperos
+                { name: "Alho granulado", category: "Temperos" },
+                { name: "Alho picado", category: "Temperos" },
+                { name: "Cebola picada", category: "Temperos" },
+                { name: "Ketchup", category: "Temperos" },
+                { name: "Maionese", category: "Temperos" },
+                { name: "Mostarda", category: "Temperos" },
+                { name: "Barbecue", category: "Temperos" },
+                { name: "Caldo de galinha", category: "Temperos" },
+                { name: "Caldo de carne", category: "Temperos" },
+                { name: "Caldo de legumes", category: "Temperos" },
+                { name: "Alho e salsa granulado", category: "Temperos" },
+                { name: "Páprica", category: "Temperos" },
+                { name: "Cominho", category: "Temperos" },
+                { name: "Orégano", category: "Temperos" },
+                { name: "Pimenta do reino", category: "Temperos" },
+                { name: "Louro", category: "Temperos" },
+                { name: "Tempero pronto", category: "Temperos" },
+                // Congelados
+                { name: "Batata palha", category: "Congelados" },
+                { name: "Batata palito", category: "Congelados" },
+                { name: "Nuggets de frango", category: "Congelados" },
+                { name: "Frango congelado", category: "Congelados" },
+                { name: "Legumes congelados", category: "Congelados" },
+                { name: "Pão de queijo", category: "Congelados" },
+                // Sobremesas
+                { name: "Mousse de chocolate", category: "Sobremesas" },
+                { name: "Pudim", category: "Sobremesas" },
+                // Higiene
+                { name: "Papel higiénico", category: "Higiene" },
+                { name: "Pasta de dentes", category: "Higiene" },
+                { name: "Fio dental", category: "Higiene" },
+                { name: "Desodorizante", category: "Higiene" },
+                { name: "Esponja de banho", category: "Higiene" },
+                { name: "Sabonete", category: "Higiene" },
+                { name: "Champô", category: "Higiene" },
+                { name: "Condicionador", category: "Higiene" },
+                // Limpeza
+                { name: "Sabão em pó", category: "Limpeza" },
+                { name: "Amaciante de roupas", category: "Limpeza" },
+                { name: "Detergente líquido", category: "Limpeza" },
+                { name: "Detergente para roupa", category: "Limpeza" },
+                { name: "Lixívia (água sanitária)", category: "Limpeza" },
+                { name: "Desinfetante", category: "Limpeza" },
+                { name: "Esponja de louça", category: "Limpeza" },
+                { name: "Lustra-móveis", category: "Limpeza" }
+            ];
+
+            // Remover duplicatas por nome
+            const uniqueProducts = Array.from(new Map(products.map(p => [p.name.toLowerCase(), p])).values());
+            uniqueProducts.sort((a, b) => a.name.localeCompare(b.name, 'pt'));
+
+            // ---------- ESTADO ----------
+            let shoppingList = [];
+            let catalogView = 'category'; // 'category' ou 'alpha'
+
+            // Carregar lista do localStorage (se houver)
+            try {
+                const saved = localStorage.getItem('shoppingList');
+                if (saved) shoppingList = JSON.parse(saved);
+            } catch (e) {}
+
+            // ---------- FUNÇÕES DE PERSISTÊNCIA ----------
+            function saveList() {
+                localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+            }
+
+            // ---------- RENDER CATÁLOGO ----------
+            function renderCatalog() {
+                const container = document.getElementById('catalogContainer');
+                if (!container) return;
+
+                if (catalogView === 'category') {
+                    const grouped = {};
+                    uniqueProducts.forEach(p => {
+                        const cat = p.category || 'Outros';
+                        if (!grouped[cat]) grouped[cat] = [];
+                        grouped[cat].push(p);
+                    });
+                    const sortedCats = Object.keys(grouped).sort((a, b) => a.localeCompare(b, 'pt'));
+                    let html = '';
+                    sortedCats.forEach(cat => {
+                        html += `<div class="category-group">`;
+                        html += `<div class="category-title">${cat}</div>`;
+                        grouped[cat].sort((a, b) => a.name.localeCompare(b.name, 'pt')).forEach(prod => {
+                            html += `<div class="item-row">
+                                <span class="item-name">${prod.name}</span>
+                                <button class="add-btn" data-product="${prod.name}">+</button>
+                            </div>`;
+                        });
+                        html += `</div>`;
+                    });
+                    container.innerHTML = html;
+                } else {
+                    let html = `<div class="category-group"><div class="category-title">📌 todos os itens</div>`;
+                    uniqueProducts.forEach(prod => {
+                        html += `<div class="item-row">
+                            <span class="item-name">${prod.name}</span>
+                            <button class="add-btn" data-product="${prod.name}">+</button>
+                        </div>`;
+                    });
+                    html += '</div>';
+                    container.innerHTML = html;
+                }
+
+                // Eventos dos botões +
+                document.querySelectorAll('.add-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const productName = btn.getAttribute('data-product');
+                        addToShoppingList(productName);
+                    });
+                });
+            }
+
+            // ---------- ADICIONAR ITEM ----------
+            function addToShoppingList(productName) {
+                const newItem = {
+                    id: Date.now() + Math.random() * 1000,
+                    name: productName,
+                    qty: 1,
+                    price: 0.0,
+                    checked: false
+                };
+                shoppingList.push(newItem);
+                saveList();
+                renderShoppingList();
+            }
+
+            // ---------- RENDER LISTA PESSOAL ----------
+            function renderShoppingList() {
+                const container = document.getElementById('shoppingListContainer');
+                const totalSpan = document.getElementById('grandTotal');
+                if (!container) return;
+
+                if (shoppingList.length === 0) {
+                    container.innerHTML = `<div style="text-align:center; color:var(--text-tertiary); padding:30px 10px;">🛒 toque em + para adicionar itens</div>`;
+                    totalSpan.innerText = '0.00';
+                    return;
+                }
+
+                let html = '';
+                let grandTotal = 0;
+
+                shoppingList.forEach(item => {
+                    const lineTotal = (item.qty || 0) * (item.price || 0);
+                    grandTotal += lineTotal;
+                    const checkedClass = item.checked ? 'checked' : '';
+
+                    html += `<div class="list-item" data-id="${item.id}">
+                        <input type="checkbox" class="item-check" ${item.checked ? 'checked' : ''} data-id="${item.id}">
+                        <span class="item-name-list ${checkedClass}">${item.name}</span>
+                        <input type="number" min="1" value="${item.qty}" class="item-qty" data-id="${item.id}" step="1" inputmode="numeric">
+                        <input type="number" min="0" value="${item.price.toFixed(2)}" class="item-price" data-id="${item.id}" step="0.01" inputmode="decimal">
+                        <span class="item-total">${lineTotal.toFixed(2)}</span>
+                        <button class="remove-item" data-id="${item.id}">✕</button>
+                    </div>`;
+                });
+
+                container.innerHTML = html;
+                totalSpan.innerText = grandTotal.toFixed(2);
+
+                // Event listeners
+                container.querySelectorAll('.item-check').forEach(cb => {
+                    cb.addEventListener('change', function(e) {
+                        const id = parseFloat(this.dataset.id);
+                        const item = shoppingList.find(i => i.id === id);
+                        if (item) {
+                            item.checked = this.checked;
+                            saveList();
+                            renderShoppingList();
+                        }
+                    });
+                });
+
+                container.querySelectorAll('.item-qty').forEach(inp => {
+                    inp.addEventListener('input', function(e) {
+                        const id = parseFloat(this.dataset.id);
+                        const item = shoppingList.find(i => i.id === id);
+                        if (item) {
+                            item.qty = Math.max(1, parseInt(this.value) || 1);
+                            saveList();
+                            renderShoppingList();
+                        }
+                    });
+                });
+
+                container.querySelectorAll('.item-price').forEach(inp => {
+                    inp.addEventListener('input', function(e) {
+                        const id = parseFloat(this.dataset.id);
+                        const item = shoppingList.find(i => i.id === id);
+                        if (item) {
+                            item.price = parseFloat(this.value) || 0;
+                            saveList();
+                            renderShoppingList();
+                        }
+                    });
+                });
+
+                container.querySelectorAll('.remove-item').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        const id = parseFloat(this.dataset.id);
+                        shoppingList = shoppingList.filter(i => i.id !== id);
+                        saveList();
+                        renderShoppingList();
+                    });
+                });
+            }
+
+            // ---------- ADICIONAR PERSONALIZADO ----------
+            function addCustomItem() {
+                const customName = prompt("Digite o nome do produto:", "");
+                if (customName && customName.trim() !== '') {
+                    addToShoppingList(customName.trim());
+                }
+            }
+
+            // ---------- TEMA ----------
+            const themeToggle = document.getElementById('themeToggle');
+            // Verificar preferência salva
+            if (localStorage.getItem('theme') === 'night') {
+                document.body.classList.add('night');
+                themeToggle.innerText = '☀️';
+            } else {
+                themeToggle.innerText = '🌙';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('night');
+                const isNight = document.body.classList.contains('night');
+                themeToggle.innerText = isNight ? '☀️' : '🌙';
+                localStorage.setItem('theme', isNight ? 'night' : 'day');
+            });
+
+            // ---------- INICIALIZAÇÃO ----------
+            document.addEventListener('DOMContentLoaded', () => {
+                renderCatalog();
+                renderShoppingList();
+
+                const btnCat = document.getElementById('viewCategory');
+                const btnAlpha = document.getElementById('viewAlpha');
+
+                btnCat.addEventListener('click', () => {
+                    catalogView = 'category';
+                    btnCat.classList.add('active');
+                    btnAlpha.classList.remove('active');
+                    renderCatalog();
+                });
+
+                btnAlpha.addEventListener('click', () => {
+                    catalogView = 'alpha';
+                    btnAlpha.classList.add('active');
+                    btnCat.classList.remove('active');
+                    renderCatalog();
+                });
+
+                document.getElementById('addCustomBtn').addEventListener('click', addCustomItem);
+            });
+        })();
+        //]]>
+    </script>
+</body>
+</html>
